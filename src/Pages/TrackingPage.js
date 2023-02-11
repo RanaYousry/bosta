@@ -1,6 +1,18 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
-import TrackingPageContent from "../components/TrackingPageContent/TrackingPageContent";
+import React, {
+  Fragment,
+  lazy,
+  Suspense,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import DataContext from "../store/data-context";
+import styles from "./TrackingPage.module.css";
+
+const TrackingPageContent = lazy(() =>
+  import("../components/TrackingPageContent/TrackingPageContent")
+);
+
 const TrackingPage = () => {
   let trackingNumber = 7234258; //6636234, 7234258, 9442984,1094442
   const [trackdata, setTrackData] = useState({});
@@ -33,7 +45,13 @@ const TrackingPage = () => {
   }, [dataCtx.trackingNumber]);
   console.log(trackdata);
   return (
-    <Fragment>
+    <Suspense
+      fallback={
+        <div className={styles.centered}>
+          <div className={styles.spinner}></div>
+        </div>
+      }
+    >
       <TrackingPageContent
         trackingNum={trackdata.trackingNum}
         currstate={trackdata.currstate}
@@ -41,7 +59,7 @@ const TrackingPage = () => {
         createDate={trackdata.createDate}
         transitEvents={trackdata.transitEvents}
       />
-    </Fragment>
+    </Suspense>
   );
 };
 
